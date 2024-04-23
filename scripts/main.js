@@ -17,15 +17,36 @@ function renderWeek() {
 
     calendar.innerHTML = '';
 
-    for (let i = 0; i < 7; i++) {
+    weekDays.forEach((dayOfWeek, index) => {
         const day = new Date(currentWeek);
-        day.setDate(currentWeek.getDate() + i);
-        const dayOfWeek = weekDays[i];
-        const weekDayDiv = document.createElement('div');
-        weekDayDiv.classList.add('week');
-        weekDayDiv.textContent = dayOfWeek + ' ' + day.getDate();
-        calendar.appendChild(weekDayDiv);
-    }
+        day.setDate(currentWeek.getDate() + index);
+
+        const dayDiv = document.createElement('div');
+        dayDiv.classList.add('day');
+
+        const dayNameDiv = document.createElement('div');
+        dayNameDiv.classList.add('day-name');
+        dayNameDiv.textContent = dayOfWeek + ' ' + day.getDate(); // Append date to day name
+
+        const hoursContainerDiv = document.createElement('div');
+        hoursContainerDiv.classList.add('hours-container');
+
+        const hoursDiv = document.createElement('div');
+        hoursDiv.classList.add('hours');
+
+        for (let hour = 0; hour < 24; hour++) {
+            const hourDiv = document.createElement('div');
+            hourDiv.classList.add('hour');
+            hourDiv.textContent = hour.toString().padStart(2, '0') + ':00';
+            hoursDiv.appendChild(hourDiv);
+        }
+
+        hoursContainerDiv.appendChild(hoursDiv);
+        dayDiv.appendChild(dayNameDiv);
+        dayDiv.appendChild(hoursContainerDiv);
+
+        calendar.appendChild(dayDiv);
+    });
 }
 
 function prevWeek() {
@@ -39,3 +60,4 @@ function nextWeek() {
 }
 
 renderWeek();
+

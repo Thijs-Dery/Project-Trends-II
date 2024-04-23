@@ -33,17 +33,46 @@
     border-radius: 3px;
 }
 
-.calendar {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 20px;
-}
 .calendar .week {
     flex-basis: calc(100% / 7);
     text-align: center;
     padding: 10px;
     border: 1px solid #ccc;
 }
+
 .controls {
     margin-bottom: 20px;
+}
+
+.calendar {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.calendar .day {
+    flex-basis: calc(100% / 7);
+    text-align: center;
+}
+
+.calendar .day .hours-container {
+    height: 300px;
+    /* Set a fixed height for the hours section */
+    overflow-y: auto;
+    /* Enable vertical scrolling */
+    border: 1px solid #ccc;
+    margin-top: 5px;
+    padding: 5px;
+}
+
+.calendar .day .hours {
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    /* Enable vertical scrolling */
+}
+
+.calendar .day .hour {
+    border-bottom: 1px solid #ccc;
+    padding: 5px;
 }
