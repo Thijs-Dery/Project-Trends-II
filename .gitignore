@@ -1,0 +1,26 @@
+# Node modules
+node_modules
+
+# Environment variables
+.env
+
+# User-specific files
+npm-debug.log
+.DS_Store
+
+# Dependency directories
+/jspm_packages/
+/bower_components/
+
+# Build output
+/build/
+/dist/
+/out/
+
+# Logs
+/logs
+*.log
+
+# IDE / editor specific files
+.idea/
+.vscode/
