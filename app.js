@@ -1,5 +1,4 @@
 const express = require('express');
-const path = require('path');
 const bcrypt = require('bcrypt');
 const mongoose = require('mongoose');
 
@@ -13,23 +12,17 @@ mongoose.connect('mongodb://localhost:27017/myapp', {
 });
 const db = mongoose.connection;
 
-// User model
-const UserSchema = new mongoose.Schema({
+// Define user schema
+const userSchema = new mongoose.Schema({
     username: String,
     password: String
 });
-const User = mongoose.model('User', UserSchema);
+const User = mongoose.model('User', userSchema);
 
-// Middleware to parse JSON and urlencoded request bodies
+// Middleware to parse JSON request bodies
 app.use(express.json());
-app.use(express.urlencoded({
-    extended: true
-}));
 
-// Serve static files from the 'public' folder
-app.use(express.static(path.join(__dirname, 'public')));
-
-// Handle POST request to /register route
+// Handle user registration
 app.post('/register', async (req, res) => {
     const {
         username,
@@ -65,7 +58,7 @@ app.post('/register', async (req, res) => {
     }
 });
 
-// Handle POST request to /login route
+// Handle user login
 app.post('/login', async (req, res) => {
     const {
         username,
