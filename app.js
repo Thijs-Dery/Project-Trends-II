@@ -5,8 +5,9 @@ const mongoose = require('mongoose');
 const app = express();
 const port = process.env.PORT || 3000;
 
-// Connect to MongoDB
-mongoose.connect('mongodb://localhost:27017/myapp', {
+// Connect to MongoDB Atlas
+const atlasURI = 'YOUR_MONGODB_ATLAS_CONNECTION_STRING';
+mongoose.connect(atlasURI, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 });
