@@ -1,55 +1,55 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
 const mongoose = require('mongoose');
+const path = require('path');
 
 const app = express();
 const port = process.env.PORT || 3000;
 
-// Connect to MongoDB Atlas
-const atlasURI = 'YOUR_MONGODB_ATLAS_CONNECTION_STRING';
+const atlasURI = 'mongodb+srv://admin:admin@cluster0.v4tqvzo.mongodb.net/LoginDB';
 mongoose.connect(atlasURI, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 });
 const db = mongoose.connection;
 
-// Define user schema
 const userSchema = new mongoose.Schema({
     username: String,
     password: String
 });
-const User = mongoose.model('User', userSchema);
+const User = mongoose.model('accounts', userSchema);
 
-// Middleware to parse JSON request bodies
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(express.static(path.join(__dirname, 'public')));
 
-// Handle user registration
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
+
 app.post('/register', async (req, res) => {
-    const {
-        username,
-        password
-    } = req.body;
+    const { username, password } = req.body;
+    console.log('Request body:', req.body);
+
+
+    // Log received username and password
+    console.log('Received username:', username);
+    console.log('Received password:', password);
 
     try {
-        // Check if username already exists
-        const existingUser = await User.findOne({
-            username
-        });
+        if (!password || typeof password !== 'string') {
+            return res.status(400).send('Invalid password');
+        }
+
+        const existingUser = await User.findOne({ username });
 
         if (existingUser) {
             return res.status(400).send('Username already exists');
         }
 
-        // Hash the password
         const hashedPassword = await bcrypt.hash(password, 10);
+        const newUser = new User({ username, password: hashedPassword });
 
-        // Create new user
-        const newUser = new User({
-            username,
-            password: hashedPassword
-        });
-
-        // Save new user to the database
         await newUser.save();
 
         res.send('User registered successfully');
@@ -59,25 +59,26 @@ app.post('/register', async (req, res) => {
     }
 });
 
-// Handle user login
+
+
+
 app.post('/login', async (req, res) => {
-    const {
-        username,
-        password
-    } = req.body;
+    const { username, password } = req.body;
 
     try {
-        // Find user by username in the database
-        const user = await User.findOne({
-            username
-        });
+        const user = await User.findOne({ username });
 
         if (!user) {
             return res.status(401).send('Invalid username or password');
         }
 
-        // Compare hashed password
+        console.log('User found:', user);
+
         const isPasswordValid = await bcrypt.compare(password, user.password);
+        
+        console.log('Password provided:', password);
+        console.log('Password from DB:', user.password);
+        console.log('Password comparison result:', isPasswordValid);
 
         if (isPasswordValid) {
             res.send('Login successful');
@@ -89,6 +90,7 @@ app.post('/login', async (req, res) => {
         res.status(500).send('Internal server error');
     }
 });
+
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
