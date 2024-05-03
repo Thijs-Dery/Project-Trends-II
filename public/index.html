@@ -5,14 +5,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles/main.css">
-    <script src="scripts/main.js"></script>
     <title>Login or Register</title>
 </head>
 
 <body>
     <div id="loginForm">
         <h1>Login</h1>
-        <form action="/login" method="POST">
+        <form action="/login" method="POST" id="loginForm">
             <div>
                 <label for="loginUsername">Username:</label>
                 <input type="text" id="loginUsername" name="username" required>
@@ -28,7 +27,7 @@
 
     <div id="registerForm" style="display: none;">
         <h1>Register</h1>
-        <form action="/register" method="POST">
+        <form action="/register" method="POST" id="registerForm">
             <div>
                 <label for="registerUsername">Username:</label>
                 <input type="text" id="registerUsername" name="username" required>
@@ -56,6 +55,54 @@
             }
         }
     </script>
+
+<script>
+document.getElementById("loginForm").addEventListener("submit", function(event) {
+    event.preventDefault(); // Prevent form submission
+    var username = document.getElementById("loginUsername").value;
+    var password = document.getElementById("loginPassword").value;
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/login", true);
+    xhr.setRequestHeader("Content-Type", "application/json");
+
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4) {
+            if (xhr.status === 200) {
+                window.location.href = "/main.html"; // Redirect to main.html on successful login
+            } else {
+                alert("Login failed: " + xhr.responseText);
+            }
+        }
+    };
+
+    xhr.send(JSON.stringify({ username: username, password: password }));
+});
+
+document.getElementById("registerForm").addEventListener("submit", function(event) {
+    event.preventDefault(); // Prevent form submission
+    var username = document.getElementById("registerUsername").value;
+    var password = document.getElementById("registerPassword").value;
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/register", true);
+    xhr.setRequestHeader("Content-Type", "application/json");
+
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4) {
+            if (xhr.status === 200) {
+                alert("Registration successful");
+                window.location.href = "/main.html"; // Redirect to main.html on successful registration
+            } else {
+                alert("Registration failed: " + xhr.responseText);
+            }
+        }
+    };
+
+    xhr.send(JSON.stringify({ username: username, password: password }));
+});
+</script>
 </body>
 
 </html>
+

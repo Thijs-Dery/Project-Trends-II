@@ -29,21 +29,16 @@ app.get('/', (req, res) => {
 
 app.post('/register', async (req, res) => {
     const { username, password } = req.body;
-    console.log('Request body:', req.body);
-
-    // Log received username and password
-    console.log('Received username:', username);
-    console.log('Received password:', password);
 
     try {
         if (!password || typeof password !== 'string') {
-            return res.status(400).send('Invalid password');
+            return res.status(400).json({ error: 'Invalid password' });
         }
 
         const existingUser = await User.findOne({ username });
 
         if (existingUser) {
-            return res.status(400).send('Username already exists');
+            return res.status(400).json({ error: 'Username already exists' });
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
@@ -51,44 +46,38 @@ app.post('/register', async (req, res) => {
 
         await newUser.save();
 
-        res.send('User registered successfully');
+        return res.status(200).json({ message: 'User registered successfully' });
     } catch (error) {
         console.error(error);
-        res.status(500).send('Internal server error');
+        return res.status(500).json({ error: 'Internal server error' });
     }
 });
+
 
 app.post('/login', async (req, res) => {
     const { username, password } = req.body;
 
     try {
+        if (!username || !password) {
+            return res.status(400).json({ error: 'Username and password are required' });
+        }
+
         const user = await User.findOne({ username });
 
         if (!user) {
-            return res.status(401).send('Invalid username or password');
+            return res.status(401).json({ error: 'Invalid username or password' });
         }
-
-        console.log('User found:', user);
 
         const isPasswordValid = await bcrypt.compare(password, user.password);
-        
 
-        //log password
-        console.log('Password provided:', password);
-        console.log('Password from DB:', user.password);
-
-
-
-        console.log('Password comparison result:', isPasswordValid);
-
-        if (isPasswordValid) {
-            res.send('Login successful');
-        } else {
-            res.status(401).send('Invalid username or password');
+        if (!isPasswordValid) {
+            return res.status(401).json({ error: 'Invalid username or password' });
         }
+
+        return res.status(200).json({ message: 'Login successful' });
     } catch (error) {
         console.error(error);
-        res.status(500).send('Internal server error');
+        return res.status(500).json({ error: 'Internal server error' });
     }
 });
 
