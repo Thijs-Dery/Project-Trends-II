@@ -31,7 +31,6 @@ app.post('/register', async (req, res) => {
     const { username, password } = req.body;
     console.log('Request body:', req.body);
 
-
     // Log received username and password
     console.log('Received username:', username);
     console.log('Received password:', password);
@@ -59,9 +58,6 @@ app.post('/register', async (req, res) => {
     }
 });
 
-
-
-
 app.post('/login', async (req, res) => {
     const { username, password } = req.body;
 
@@ -76,8 +72,13 @@ app.post('/login', async (req, res) => {
 
         const isPasswordValid = await bcrypt.compare(password, user.password);
         
+
+        //log password
         console.log('Password provided:', password);
         console.log('Password from DB:', user.password);
+
+
+
         console.log('Password comparison result:', isPasswordValid);
 
         if (isPasswordValid) {
@@ -90,7 +91,6 @@ app.post('/login', async (req, res) => {
         res.status(500).send('Internal server error');
     }
 });
-
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
