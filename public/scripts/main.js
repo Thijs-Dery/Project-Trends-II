@@ -26,12 +26,17 @@ function renderWeek(calendarEl, currentDate) {
 
     const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
+    // Add empty cell before the days
+    const emptyCellBeforeDays = document.createElement('div');
+    emptyCellBeforeDays.classList.add('empty-cell');
+    calendarEl.appendChild(emptyCellBeforeDays);
+
     // Create day names row with dates
     for (let i = 0; i < 7; i++) {
         const dayCell = document.createElement('div');
         dayCell.classList.add('day-cell');
         dayCell.textContent = days[i] + ' ' + (weekStart.getDate() + i) + '/' + (weekStart.getMonth() + 1);
-        if (currentDate.getDate() === weekStart.getDate() + i) {
+        if (i === 2) { // Highlight Wednesday
             dayCell.classList.add('current-day');
         }
         calendarEl.appendChild(dayCell);
@@ -49,14 +54,7 @@ function renderWeek(calendarEl, currentDate) {
         for (let j = 0; j < 7; j++) {
             const emptyCell = document.createElement('div');
             emptyCell.classList.add('empty-cell');
-            if (currentDate.getDate() === weekStart.getDate() + j) {
-                emptyCell.classList.add('current-day');
-            }
             calendarEl.appendChild(emptyCell);
         }
     }
 }
-
-
-
-
