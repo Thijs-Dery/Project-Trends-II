@@ -2,6 +2,11 @@
     display: grid;
     grid-template-columns: repeat(8, 1fr);
     grid-template-rows: repeat(25, 30px);
+    background-color: white;
+}
+
+html{
+    background-color: black;
 }
 
 .day-cell {
@@ -33,6 +38,11 @@
 }
 
 .current-day {
-    background-color: lightgreen; /* Green */
+    background-color: #4CAF50; /* Green */
 }
 
+button{
+    margin-top: 20px;
+    padding: 5px;
+    background-color: #4CAF50;
+}
