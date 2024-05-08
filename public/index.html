@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/index.css">
     <title>Login or Register</title>
 </head>
 
@@ -57,6 +57,7 @@
     </script>
 
 <script>
+
 document.getElementById("loginForm").addEventListener("submit", function(event) {
     event.preventDefault(); // Prevent form submission
     var username = document.getElementById("loginUsername").value;
@@ -101,8 +102,8 @@ document.getElementById("registerForm").addEventListener("submit", function(even
 
     xhr.send(JSON.stringify({ username: username, password: password }));
 });
+
 </script>
 </body>
 
 </html>
-

@@ -19,6 +19,14 @@ const userSchema = new mongoose.Schema({
 });
 const User = mongoose.model('accounts', userSchema);
 
+const eventSchema = new mongoose.Schema({
+    title: String,
+    start: Date,
+    end: Date,
+    description: String
+});
+const Event = mongoose.model('events', eventSchema);
+
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
@@ -81,6 +89,69 @@ app.post('/login', async (req, res) => {
     }
 });
 
+// Calendar routes
+app.get('/main', (req, res) => {
+    const filePath = path.join(__dirname, 'main.html');
+    res.sendFile(filePath, (err) => {
+        if (err) {
+            console.error('Error sending file:', err);
+            res.status(err.status || 500).send('Internal Server Error');
+        }
+    });
+});
+
+
+
+// Create event
+app.post('/events', async (req, res) => {
+    try {
+        const event = new Event(req.body);
+        await event.save();
+        res.status(201).send(event);
+    } catch (error) {
+        res.status(400).send(error);
+    }
+});
+
+
+
+// Get all events
+app.get('/events', async (req, res) => {
+    try {
+        const events = await Event.find();
+        res.send(events);
+    } catch (error) {
+        res.status(500).send(error);
+    }
+});
+
+// Update event
+app.put('/events/:id', async (req, res) => {
+    try {
+        const event = await Event.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        if (!event) {
+            return res.status(404).send();
+        }
+        res.send(event);
+    } catch (error) {
+        res.status(400).send(error);
+    }
+});
+
+// Delete event
+app.delete('/events/:id', async (req, res) => {
+    try {
+        const event = await Event.findByIdAndDelete(req.params.id);
+        if (!event) {
+            return res.status(404).send();
+        }
+        res.send(event);
+    } catch (error) {
+        res.status(500).send(error);
+    }
+});
+
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });
+
