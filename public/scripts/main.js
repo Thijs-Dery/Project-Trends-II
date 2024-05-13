@@ -13,6 +13,16 @@ document.addEventListener('DOMContentLoaded', function() {
         currentDate.setDate(currentDate.getDate() + 7); // Move forward by one week
         renderWeek(calendarEl, currentDate);
     });
+
+    // Show event form when a cell is clicked
+    calendarEl.addEventListener('click', function(event) {
+        const target = event.target;
+        if (target.classList.contains('empty-cell')) {
+            document.getElementById('event-form').style.display = 'block';
+        } else {
+            document.getElementById('event-form').style.display = 'none';
+        }
+    });
 });
 
 function renderWeek(calendarEl, currentDate) {
@@ -57,4 +67,34 @@ function renderWeek(calendarEl, currentDate) {
             calendarEl.appendChild(emptyCell);
         }
     }
+}
+
+function addEvent() {
+    const title = document.getElementById('title').value;
+    const start = document.getElementById('start').value;
+    const end = document.getElementById('end').value;
+    const description = document.getElementById('description').value;
+
+    const eventData = { title, start, end, description };
+
+    fetch('/events', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(eventData)
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Failed to add event');
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('Event added successfully:', data);
+        // Optionally, update the UI to reflect the added event
+    })
+    .catch(error => {
+        console.error('Error adding event:', error);
+    });
 }

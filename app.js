@@ -100,20 +100,28 @@ app.get('/main', (req, res) => {
     });
 });
 
-
-
 // Create event
 app.post('/events', async (req, res) => {
     try {
-        const event = new Event(req.body);
+        const { title, start, end, description } = req.body;
+
+        // Create a new event instance
+        const event = new Event({
+            title,
+            start: new Date(start), // Convert start date string to Date object
+            end: new Date(end),     // Convert end date string to Date object
+            description
+        });
+
+        // Save the event to the database
         await event.save();
+
         res.status(201).send(event);
     } catch (error) {
+        console.error('Error adding event:', error);
         res.status(400).send(error);
     }
 });
-
-
 
 // Get all events
 app.get('/events', async (req, res) => {
@@ -154,4 +162,3 @@ app.delete('/events/:id', async (req, res) => {
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });
-
