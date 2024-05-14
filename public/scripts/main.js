@@ -17,10 +17,40 @@ document.addEventListener('DOMContentLoaded', function() {
     // Show event form when a cell is clicked
     calendarEl.addEventListener('click', function(event) {
         const target = event.target;
-        if (target.classList.contains('empty-cell')) {
-            document.getElementById('event-form').style.display = 'block';
+        if (target.classList.contains('day-cell') || target.classList.contains('empty-cell')) {
+            document.getElementById('event-form').style.display = 'flex';
         } else {
             document.getElementById('event-form').style.display = 'none';
+        }
+    });
+
+    document.getElementById('close-btn').addEventListener('click', function() {
+        document.getElementById('event-form').style.display = 'none';
+    });
+    
+
+    // Variables to store mouse position and the position of the event form
+    let offsetX, offsetY;
+    let isDragging = false;
+
+    // Event listener to start dragging the event form
+    document.getElementById('event-form').addEventListener('mousedown', function(event) {
+        isDragging = true;
+        offsetX = event.clientX - parseInt(window.getComputedStyle(this).left);
+        offsetY = event.clientY - parseInt(window.getComputedStyle(this).top);
+    });
+
+    // Event listener to stop dragging the event form
+    document.addEventListener('mouseup', function() {
+        isDragging = false;
+    });
+
+    // Event listener to move the event form while dragging
+    document.addEventListener('mousemove', function(event) {
+        if (isDragging) {
+            const form = document.getElementById('event-form');
+            form.style.left = event.clientX - offsetX + 'px';
+            form.style.top = event.clientY - offsetY + 'px';
         }
     });
 });
@@ -59,8 +89,6 @@ function renderWeek(calendarEl, currentDate) {
         // Check if the current cell corresponds to today's date
         if (day === todayDay && month === todayMonth) {
             dayCell.classList.add('current-day');
-            console.log("currentDate.getDate():", currentDate.getDate());
-            console.log("currentDate.getMonth() + 1:", currentDate.getMonth() + 1);
         }
         
         calendarEl.appendChild(dayCell);
@@ -82,7 +110,6 @@ function renderWeek(calendarEl, currentDate) {
         }
     }
 }
-
 
 function addEvent() {
     const title = document.getElementById('title').value;
