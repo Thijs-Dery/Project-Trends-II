@@ -35,6 +35,10 @@ function renderWeek(calendarEl, currentDate) {
     weekEnd.setDate(weekEnd.getDate() + 6); // Get end of the week
 
     const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    
+    const today = new Date(); // Get today's date
+    const todayDay = today.getDate();
+    const todayMonth = today.getMonth() + 1;
 
     // Add empty cell before the days
     const emptyCellBeforeDays = document.createElement('div');
@@ -45,10 +49,20 @@ function renderWeek(calendarEl, currentDate) {
     for (let i = 0; i < 7; i++) {
         const dayCell = document.createElement('div');
         dayCell.classList.add('day-cell');
-        dayCell.textContent = days[i] + ' ' + (weekStart.getDate() + i) + '/' + (weekStart.getMonth() + 1);
-        if (i === 2) { // Highlight Wednesday
+        const dayDate = new Date(weekStart);
+        dayDate.setDate(dayDate.getDate() + i);
+        const day = dayDate.getDate();
+        const month = dayDate.getMonth() + 1;
+        const formattedDate = `${day < 10 ? '0' : ''}${day}/${month < 10 ? '0' : ''}${month}`;
+        dayCell.textContent = days[i] + ' ' + formattedDate;
+
+        // Check if the current cell corresponds to today's date
+        if (day === todayDay && month === todayMonth) {
             dayCell.classList.add('current-day');
+            console.log("currentDate.getDate():", currentDate.getDate());
+            console.log("currentDate.getMonth() + 1:", currentDate.getMonth() + 1);
         }
+        
         calendarEl.appendChild(dayCell);
     }
 
@@ -59,7 +73,7 @@ function renderWeek(calendarEl, currentDate) {
         hourCell.classList.add('hour-cell');
         hourCell.textContent = hourNames[i];
         calendarEl.appendChild(hourCell);
-        
+
         // Create empty cells for each hour
         for (let j = 0; j < 7; j++) {
             const emptyCell = document.createElement('div');
@@ -68,6 +82,7 @@ function renderWeek(calendarEl, currentDate) {
         }
     }
 }
+
 
 function addEvent() {
     const title = document.getElementById('title').value;

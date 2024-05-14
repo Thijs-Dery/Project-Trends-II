@@ -4,11 +4,11 @@
     grid-template-rows: repeat(25, 30px);
     background-color: white;
 }
-
-html{
+ 
+html {
     background-color: black;
 }
-
+ 
 .day-cell {
     border-right: 1px solid #ccc;
     border-bottom: 1px solid #ccc;
@@ -16,9 +16,10 @@ html{
     margin: 0;
     font-weight: bold;
     text-align: center;
-    background-color: #f0f0f0; /* Light gray */
+    background-color: #f0f0f0;
+    /* Light gray */
 }
-
+ 
 .hour-cell {
     border-right: 1px solid #ccc;
     border-bottom: 1px solid #ccc;
@@ -26,9 +27,10 @@ html{
     margin: 0;
     font-weight: bold;
     text-align: center;
-    background-color: #f0f0f0; /* Light gray */
+    background-color: #f0f0f0;
+    /* Light gray */
 }
-
+ 
 .empty-cell {
     border-right: 1px solid #ccc;
     border-bottom: 1px solid #ccc;
@@ -36,12 +38,18 @@ html{
     margin: 0;
     text-align: center;
 }
-
-.current-day {
-    background-color: #4CAF50; /* Green */
+ 
+.day-cell.current-day {
+    background-color: #4CAF50;
+    /* Green */
 }
-
-button{
+ 
+.day-cell.current-day span {
+    color: white;
+    /* Text color */
+}
+ 
+button {
     margin-top: 20px;
     padding: 5px;
     background-color: #4CAF50;
