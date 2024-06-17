@@ -133,8 +133,9 @@
                                 <input type="text" placeholder="Event Time To" class="event-time-to" />
                             </div>
                             <div class="add-event-input">
-                                <select class="event-category">
+                                <select class="event-category" onchange="checkCategory(this)">
                                     <option value="" disabled selected>Select Category</option>
+                                    <!-- Categories will be added dynamically -->
                                 </select>
                             </div>
                             <div class="new-category-input" style="display: none;">
