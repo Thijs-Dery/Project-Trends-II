@@ -1,164 +1,81 @@
 const express = require('express');
-const bcrypt = require('bcrypt');
 const mongoose = require('mongoose');
-const path = require('path');
+const session = require('express-session');
+const bodyParser = require('body-parser');
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = 3000;
 
-const atlasURI = 'mongodb+srv://admin:admin@cluster0.v4tqvzo.mongodb.net/LoginDB';
-mongoose.connect(atlasURI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-});
-const db = mongoose.connection;
-
-const userSchema = new mongoose.Schema({
-    username: String,
-    password: String
-});
-const User = mongoose.model('accounts', userSchema);
+mongoose.connect('mongodb://localhost:27017/LoginDB', { useNewUrlParser: true, useUnifiedTopology: true });
 
 const eventSchema = new mongoose.Schema({
     title: String,
     start: Date,
     end: Date,
-    description: String
-});
-const Event = mongoose.model('events', eventSchema);
-
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
-app.use(express.static(path.join(__dirname, 'public')));
-
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'index.html'));
+    description: String,
+    userId: mongoose.Schema.Types.ObjectId
 });
 
-app.post('/register', async (req, res) => {
-    const { username, password } = req.body;
+const Event = mongoose.model('Event', eventSchema);
 
-    try {
-        if (!password || typeof password !== 'string') {
-            return res.status(400).json({ error: 'Invalid password' });
-        }
+const accountSchema = new mongoose.Schema({
+    username: String,
+    password: String,
+});
 
-        const existingUser = await User.findOne({ username });
+const Account = mongoose.model('Account', accountSchema);
 
-        if (existingUser) {
-            return res.status(400).json({ error: 'Username already exists' });
-        }
+app.use(bodyParser.json());
+app.use(session({
+    secret: 'your_secret_key',
+    resave: false,
+    saveUninitialized: true
+}));
 
-        const hashedPassword = await bcrypt.hash(password, 10);
-        const newUser = new User({ username, password: hashedPassword });
-
-        await newUser.save();
-
-        return res.status(200).json({ message: 'User registered successfully' });
-    } catch (error) {
-        console.error(error);
-        return res.status(500).json({ error: 'Internal server error' });
+// Middleware to check if the user is logged in
+function checkAuth(req, res, next) {
+    if (req.session.userId) {
+        next();
+    } else {
+        res.status(401).send('Unauthorized');
     }
-});
-
+}
 
 app.post('/login', async (req, res) => {
     const { username, password } = req.body;
-
-    try {
-        if (!username || !password) {
-            return res.status(400).json({ error: 'Username and password are required' });
-        }
-
-        const user = await User.findOne({ username });
-
-        if (!user) {
-            return res.status(401).json({ error: 'Invalid username or password' });
-        }
-
-        const isPasswordValid = await bcrypt.compare(password, user.password);
-
-        if (!isPasswordValid) {
-            return res.status(401).json({ error: 'Invalid username or password' });
-        }
-
-        return res.status(200).json({ message: 'Login successful' });
-    } catch (error) {
-        console.error(error);
-        return res.status(500).json({ error: 'Internal server error' });
+    const account = await Account.findOne({ username, password });
+    if (account) {
+        req.session.userId = account._id;
+        res.send('Logged in');
+    } else {
+        res.status(401).send('Invalid credentials');
     }
 });
 
-// Calendar routes
-app.get('/main', (req, res) => {
-    const filePath = path.join(__dirname, 'main.html');
-    res.sendFile(filePath, (err) => {
-        if (err) {
-            console.error('Error sending file:', err);
-            res.status(err.status || 500).send('Internal Server Error');
-        }
+app.post('/logout', (req, res) => {
+    req.session.destroy();
+    res.send('Logged out');
+});
+
+app.post('/events', checkAuth, async (req, res) => {
+    const { title, start, end, description } = req.body;
+    const event = new Event({
+        title,
+        start,
+        end,
+        description,
+        userId: req.session.userId
     });
+    await event.save();
+    res.send('Event created');
 });
 
-// Create event
-app.post('/events', async (req, res) => {
-    try {
-        const { title, start, end, description } = req.body;
-
-        // Create a new event instance
-        const event = new Event({
-            title,
-            start: new Date(start), // Convert start date string to Date object
-            end: new Date(end),     // Convert end date string to Date object
-            description
-        });
-
-        // Save the event to the database
-        await event.save();
-
-        res.status(201).send(event);
-    } catch (error) {
-        console.error('Error adding event:', error);
-        res.status(400).send(error);
-    }
-});
-
-// Get all events
-app.get('/events', async (req, res) => {
-    try {
-        const events = await Event.find();
-        res.send(events);
-    } catch (error) {
-        res.status(500).send(error);
-    }
-});
-
-// Update event
-app.put('/events/:id', async (req, res) => {
-    try {
-        const event = await Event.findByIdAndUpdate(req.params.id, req.body, { new: true });
-        if (!event) {
-            return res.status(404).send();
-        }
-        res.send(event);
-    } catch (error) {
-        res.status(400).send(error);
-    }
-});
-
-// Delete event
-app.delete('/events/:id', async (req, res) => {
-    try {
-        const event = await Event.findByIdAndDelete(req.params.id);
-        if (!event) {
-            return res.status(404).send();
-        }
-        res.send(event);
-    } catch (error) {
-        res.status(500).send(error);
-    }
+app.get('/events', checkAuth, async (req, res) => {
+    const events = await Event.find({ userId: req.session.userId });
+    res.json(events);
 });
 
 app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
+    console.log(`Server running at http://localhost:${port}/`);
 });
+
