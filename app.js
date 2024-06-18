@@ -89,9 +89,8 @@ app.post('/login', async (req, res) => {
     }
 });
 
-// Calendar routes
 app.get('/main', (req, res) => {
-    const filePath = path.join(__dirname, 'main.html');
+    const filePath = path.join(__dirname, 'public', 'main.html');
     res.sendFile(filePath, (err) => {
         if (err) {
             console.error('Error sending file:', err);

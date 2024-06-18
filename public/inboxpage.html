@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="nl">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Inbox</title>
+
+    <!-- Montserrat Font -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles/inbox.css">
+</head>
+
+<body>
+    <div class="grid-container">
+
+        <!-- Header -->
+        <header class="header">
+            <div class="menu-icon" onclick="openSidebar()">
+                <span class="material-icons-outlined">menu</span>
+            </div>
+            <div class="header-left">
+                <span class="material-icons-outlined">search</span>
+            </div>
+            <div class="header-right">
+                <span class="material-icons-outlined">notifications</span>
+                <a href="inbox.html">
+                    <span class="material-icons-outlined">email</span>
+                </a>
+                <a href="account.html">
+                    <span class="material-icons-outlined">account_circle</span>
+                </a>
+            </div>
+        </header>
+        <!-- End Header -->
+
+        <!-- Sidebar -->
+        <aside id="sidebar">
+            <div class="sidebar-title">
+                <div class="sidebar-brand">
+                    <span class="material-icons-outlined">shopping_cart</span> Dashboard
+                </div>
+                <span class="material-icons-outlined" onclick="closeSidebar()">close</span>
+            </div>
+
+            <ul class="sidebar-list">
+                <li class="sidebar-list-item">
+                    <a href="index.html">
+                        <span class="material-icons-outlined">dashboard</span> Dashboard
+                    </a>
+                </li>
+                <li class="sidebar-list-item">
+                    <a href="main.html">
+                        <span class="material-icons-outlined">calendar_today</span> Calendar
+                    </a>
+                </li>
+                <li class="sidebar-list-item">
+                    <a href="inboxpage.html">
+                        <span class="material-icons-outlined">inbox</span> Inbox
+                    </a>
+                </li>
+                <li class="sidebar-list-item">
+                    <a href="chart.html">
+                        <span class="material-icons-outlined">poll</span> Charts
+                    </a>
+                </li>
+                <li class="sidebar-list-item">
+                    <a href="#">
+                        <span class="material-icons-outlined">settings</span> Settings
+                    </a>
+                </li>
+                <li class="sidebar-list-item">
+                    <a href="account.html">
+                        <span class="material-icons-outlined">account_circle</span> Account
+                    </a>
+                </li> 
+            </ul>
+        </aside>
+        <!-- End Sidebar -->
+
+        <!-- Main -->
+        <main class="main-container">
+            <div class="main-title">
+                <h2>Inbox</h2>
+                <div class="filter-dropdown">
+                    <label for="message-filter">Filter:</label>
+                    <select id="message-filter" onchange="filterMessages(this.value)">
+                        <option value="all">Alle</option>
+                        <option value="starred">Met Ster</option>
+                        <option value="unstarred">Zonder Ster</option>
+                        <option value="unread">Ongelezen</option>
+                        <option value="read">Gelezen</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="inbox-container">
+                <div class="compose-message">
+                    <h3>Nieuw Bericht</h3>
+                    <label for="to">Aan:</label>
+                    <input type="text" id="to" name="to">
+                    <label for="cc">Cc:</label>
+                    <input type="text" id="cc" name="cc">
+                    <label for="bcc">Bcc:</label>
+                    <input type="text" id="bcc" name="bcc">
+                    <label for="subject">Onderwerp:</label>
+                    <input type="text" id="subject" name="subject">
+                    <label for="message">Bericht:</label>
+                    <textarea id="message" name="message"></textarea>
+                    <button onclick="sendMessage()">Verzenden</button>
+                </div>
+
+                <div class="messages-list">
+                    <h3>Berichten</h3>
+                    <div class="message" data-read="true" data-favorite="false">
+                        <div class="message-header">
+                            <span class="message-sender">Afzender 1</span>
+                            <span class="message-subject">Onderwerp 1</span>
+                            <span class="message-actions">
+                                <span class="material-icons-outlined" onclick="toggleRead(this)">markunread</span>
+                                <span class="material-icons-outlined" onclick="toggleFavorite(this)">star_border</span>
+                            </span>
+                        </div>
+                        <div class="message-body">
+                            Dit is een voorbeeldbericht.
+                        </div>
+                    </div>
+                    <div class="message" data-read="false" data-favorite="true">
+                        <div class="message-header">
+                            <span class="message-sender">Afzender 2</span>
+                            <span class="message-subject">Onderwerp 2</span>
+                            <span class="message-actions">
+                                <span class="material-icons-outlined" onclick="toggleRead(this)">markunread</span>
+                                <span class="material-icons-outlined" onclick="toggleFavorite(this)">star</span>
+                            </span>
+                        </div>
+                        <div class="message-body">
+                            Dit is een ander voorbeeldbericht.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <!-- End Main -->
+    </div>
+
+    <!-- Custom JS -->
+    <script src="inbox.js"></script>
+</body>
+
+</html>

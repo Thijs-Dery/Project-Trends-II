@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="nl">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Account Beheer</title>
+
+    <!-- Montserrat Font -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles/account.css">
+</head>
+
+<body>
+    <div class="grid-container">
+
+        <!-- Header -->
+        <header class="header">
+            <div class="menu-icon" onclick="openSidebar()">
+                <span class="material-icons-outlined">menu</span>
+            </div>
+            <div class="header-left">
+                <span class="material-icons-outlined">search</span>
+            </div>
+            <div class="header-right">
+                <span class="material-icons-outlined">notifications</span>
+                <span class="material-icons-outlined">email</span>
+                <a href="account.html">
+                    <span class="material-icons-outlined">account_circle</span>
+                </a>
+            </div>
+        </header>
+        <!-- End Header -->
+
+        <!-- Sidebar -->
+        <aside id="sidebar">
+            <div class="sidebar-title">
+                <div class="sidebar-brand">
+                    <span class="material-icons-outlined">shopping_cart</span> Dashboard
+                </div>
+                <span class="material-icons-outlined" onclick="closeSidebar()">close</span>
+            </div>
+
+            <ul class="sidebar-list">
+                <li class="sidebar-list-item">
+                    <a href="index.html">
+                        <span class="material-icons-outlined">dashboard</span> Dashboard
+                    </a>
+                </li>
+                <li class="sidebar-list-item">
+                    <a href="main.html">
+                        <span class="material-icons-outlined">calendar_today</span> Calendar
+                    </a>                    
+                </li>
+                <li class="sidebar-list-item">
+                    <a href="inboxpage.html">
+                        <span class="material-icons-outlined">inbox</span> Inbox
+                    </a>
+                </li>
+                <li class="sidebar-list-item">
+                    <a href="chart.html">
+                        <span class="material-icons-outlined">poll</span> Charts
+                    </a>
+                </li>
+                <li class="sidebar-list-item">
+                    <a href="#">
+                        <span class="material-icons-outlined">settings</span> Settings
+                    </a>
+                </li>
+                <li class="sidebar-list-item">
+                    <a href="account.html">
+                        <span class="material-icons-outlined">account_circle</span> Account
+                    </a>
+                </li>
+            </ul>
+        </aside>
+        <!-- End Sidebar -->
+
+        <!-- Main -->
+        <main class="main-container">
+            <div class="main-title">
+                <h2>Account Beheer</h2>
+            </div>
+
+            <div class="account-settings">
+                <div class="profile-picture">
+                    <h3>Profielfoto</h3>
+                    <img id="profile-image" src="path/to/default/profile-pic.jpg" alt="Profielfoto" />
+                    <input type="file" id="upload-profile-pic" accept="image/*" />
+                    <button onclick="uploadProfilePic()">Uploaden</button>
+                    <button onclick="removeProfilePic()">Verwijderen</button>
+                </div>
+
+                <div class="account-details">
+                    <h3>Accountgegevens</h3>
+                    <label for="username">Gebruikersnaam:</label>
+                    <input type="text" id="username" name="username" value="Huidige Gebruikersnaam" />
+                    <label for="email">E-mail:</label>
+                    <input type="email" id="email" name="email" value="huidige.email@example.com" />
+                    <button onclick="updateAccountDetails()">Bijwerken</button>
+                </div>
+
+                <div class="change-password">
+                    <h3>Wachtwoord Wijzigen</h3>
+                    <label for="current-password">Huidig Wachtwoord:</label>
+                    <input type="password" id="current-password" name="current-password" />
+                    <label for="new-password">Nieuw Wachtwoord:</label>
+                    <input type="password" id="new-password" name="new-password" />
+                    <label for="confirm-password">Bevestig Nieuw Wachtwoord:</label>
+                    <input type="password" id="confirm-password" name="confirm-password" />
+                    <button onclick="changePassword()">Wijzigen</button>
+                </div>
+            </div>
+        </main>
+        <!-- End Main -->
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        function uploadProfilePic() {
+            const fileInput = document.getElementById('upload-profile-pic');
+            const profileImage = document.getElementById('profile-image');
+            const file = fileInput.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    profileImage.src = e.target.result;
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function removeProfilePic() {
+            const profileImage = document.getElementById('profile-image');
+            profileImage.src = 'path/to/default/profile-pic.jpg';
+        }
+
+        function updateAccountDetails() {
+            const username = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
+            alert('Accountgegevens bijgewerkt: ' + username + ', ' + email);
+        }
+
+        function changePassword() {
+            const currentPassword = document.getElementById('current-password').value;
+            const newPassword = document.getElementById('new-password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+            if (newPassword === confirmPassword) {
+                alert('Wachtwoord succesvol gewijzigd');
+            } else {
+                alert('Nieuwe wachtwoorden komen niet overeen');
+            }
+        }
+    </script>
+</body>
+
+</html>

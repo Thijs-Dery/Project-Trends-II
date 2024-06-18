@@ -1,0 +1,221 @@
+/* General Styles */
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #1f1f1f;
+    /* Dark background */
+    color: white;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.material-icons-outlined {
+    vertical-align: middle;
+    line-height: 1px;
+    font-size: 35px;
+    color: white;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    grid-template-rows: 70px 1fr;
+    grid-template-areas:
+        'sidebar header'
+        'sidebar main';
+    height: 100vh;
+}
+
+/* Header */
+.header {
+    grid-area: header;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    background-color: #263043;
+    /* Dark blue */
+    box-shadow: 0 6px 7px -3px rgba(0, 0, 0, 0.35);
+}
+
+.header .menu-icon {
+    cursor: pointer;
+    display: none;
+}
+
+.header .header-left {
+    display: flex;
+    align-items: center;
+}
+
+.header .header-left .material-icons-outlined {
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+.header .header-right {
+    display: flex;
+    align-items: center;
+}
+
+.header .header-right .material-icons-outlined {
+    margin-left: 15px;
+    cursor: pointer;
+}
+
+/* Sidebar */
+#sidebar {
+    grid-area: sidebar;
+    background-color: #2c2c2c;
+    /* Dark grey */
+    overflow-y: auto;
+    transition: all 0.3s;
+}
+
+.sidebar-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    border-bottom: 1px solid #444;
+}
+
+.sidebar-title .material-icons-outlined {
+    cursor: pointer;
+}
+
+.sidebar-brand {
+    font-size: 20px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    color: #fff;
+}
+
+.sidebar-brand .material-icons-outlined {
+    margin-right: 10px;
+}
+
+.sidebar-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar-list-item {
+    padding: 15px 20px;
+    font-size: 18px;
+    border-bottom: 1px solid #444;
+}
+
+.sidebar-list-item:hover {
+    background-color: #3a3a3a;
+    /* Darker grey on hover */
+}
+
+.sidebar-list-item a {
+    text-decoration: none;
+    color: white;
+    display: flex;
+    align-items: center;
+}
+
+.sidebar-list-item a .material-icons-outlined {
+    margin-right: 10px;
+}
+
+/* Main Content */
+.main-container {
+    grid-area: main;
+    overflow-y: auto;
+    background-color: #1f1f1f;
+    /* Dark background */
+    padding: 20px;
+}
+
+.page-title {
+    margin-bottom: 20px;
+}
+
+.charts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.chart-card {
+    background-color: #263043;
+    /* Dark blue */
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+
+.chart-card .chart-header {
+    margin-bottom: 15px;
+}
+
+.chart-card .chart-title {
+    color: #fff;
+    margin: 0;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.chart-card .chart-body {
+    background-color: #2c2c2c;
+    /* Dark grey */
+    padding: 15px;
+    border-radius: 8px;
+}
+
+/* ApexCharts Styling */
+.apexcharts-canvas {
+    background: transparent;
+}
+
+.apexcharts-tooltip {
+    background: rgba(0, 0, 0, 0.7);
+    color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.apexcharts-xaxistooltip {
+    background: rgba(0, 0, 0, 0.7);
+    color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+/* Media Queries */
+@media screen and (max-width: 992px) {
+    .grid-container {
+        grid-template-columns: 1fr;
+        grid-template-rows: 70px 1fr;
+        grid-template-areas:
+            'header'
+            'main';
+    }
+
+    .header .menu-icon {
+        display: inline;
+    }
+
+    #sidebar {
+        display: none;
+    }
+
+    .sidebar-title .material-icons-outlined {
+        display: inline;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .charts {
+        grid-template-columns: 1fr;
+    }
+
+    .sidebar-list-item {
+        font-size: 16px;
+    }
+}
