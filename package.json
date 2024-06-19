@@ -14,6 +14,6 @@
     "@fullcalendar/daygrid": "^6.1.11",
     "bcrypt": "^5.1.1",
     "express": "^4.19.2",
-    "mongoose": "^8.3.2"
+    "mongoose": "^8.4.3"
   }
 }

@@ -24,25 +24,23 @@ document.addEventListener('DOMContentLoaded', function () {
     let year = today.getFullYear();
 
     const months = [
-        "Januari",
-        "Februari",
-        "Maart",
-        "April",
-        "Mei",
-        "Juni",
-        "Juli",
-        "Augustus",
-        "September",
-        "Oktober",
-        "November",
-        "December",
+        "January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December",
     ];
 
     const eventsArr = [];
+    let userId = localStorage.getItem('userId'); // Get userId from localStorage
+
+    if (!userId) {
+        // Redirect to login page or show login modal if userId is not found
+        alert("User not logged in. Please login to continue.");
+        window.location.href = '/login.html'; // Uncomment if you have a login page
+    }
+
     fetchEvents();
 
     function fetchEvents() {
-        fetch('/events')
+        fetch(`/events?userId=${userId}`)
             .then(response => response.json())
             .then(data => {
                 data.forEach(event => {
@@ -243,7 +241,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
         if (events === "") {
             events = `<div class="no-event">
-                    <h3>Geen evenementen</h3>
+                    <h3>No events</h3>
                 </div>`;
         }
         eventsContainer.innerHTML = events;
@@ -296,7 +294,8 @@ document.addEventListener('DOMContentLoaded', function () {
         const event = {
             title: eventTitle,
             start: start,
-            end: end
+            end: end,
+            userId // Include userId when creating the event
         };
 
         fetch('/events', {
@@ -328,7 +327,5 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 });
-
-
 
 

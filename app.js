@@ -23,7 +23,8 @@ const eventSchema = new mongoose.Schema({
     title: String,
     start: Date,
     end: Date,
-    description: String
+    description: String,
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'accounts' } // Reference to the user
 });
 const Event = mongoose.model('events', eventSchema);
 
@@ -32,7 +33,7 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'index.html'));
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 app.post('/register', async (req, res) => {
@@ -54,13 +55,12 @@ app.post('/register', async (req, res) => {
 
         await newUser.save();
 
-        return res.status(200).json({ message: 'User registered successfully' });
+        return res.status(200).json({ message: 'User registered successfully', userId: newUser._id });
     } catch (error) {
         console.error(error);
         return res.status(500).json({ error: 'Internal server error' });
     }
 });
-
 
 app.post('/login', async (req, res) => {
     const { username, password } = req.body;
@@ -82,34 +82,34 @@ app.post('/login', async (req, res) => {
             return res.status(401).json({ error: 'Invalid username or password' });
         }
 
-        return res.status(200).json({ message: 'Login successful' });
+        return res.status(200).json({ message: 'Login successful', userId: user._id });
     } catch (error) {
         console.error(error);
         return res.status(500).json({ error: 'Internal server error' });
     }
 });
 
+// Serve main.html file
 app.get('/main', (req, res) => {
-    const filePath = path.join(__dirname, 'public', 'main.html');
-    res.sendFile(filePath, (err) => {
-        if (err) {
-            console.error('Error sending file:', err);
-            res.status(err.status || 500).send('Internal Server Error');
-        }
-    });
+    res.sendFile(path.join(__dirname, 'public', 'main.html'));
 });
 
 // Create event
 app.post('/events', async (req, res) => {
     try {
-        const { title, start, end, description } = req.body;
+        const { title, start, end, description, userId } = req.body;
+
+        if (!mongoose.Types.ObjectId.isValid(userId)) {
+            return res.status(400).send({ error: 'Invalid user ID' });
+        }
 
         // Create a new event instance
         const event = new Event({
             title,
             start: new Date(start), // Convert start date string to Date object
             end: new Date(end),     // Convert end date string to Date object
-            description
+            description,
+            userId: new mongoose.Types.ObjectId(userId) // Correct way to create ObjectId
         });
 
         // Save the event to the database
@@ -122,10 +122,16 @@ app.post('/events', async (req, res) => {
     }
 });
 
-// Get all events
+// Get all events for a user
 app.get('/events', async (req, res) => {
     try {
-        const events = await Event.find();
+        const { userId } = req.query;
+
+        if (!mongoose.Types.ObjectId.isValid(userId)) {
+            return res.status(400).send({ error: 'Invalid user ID' });
+        }
+
+        const events = await Event.find({ userId: new mongoose.Types.ObjectId(userId) });
         res.send(events);
     } catch (error) {
         res.status(500).send(error);
@@ -161,3 +167,4 @@ app.delete('/events/:id', async (req, res) => {
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });
+
