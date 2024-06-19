@@ -236,6 +236,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     <div class="event-time">
                       <span class="event-time">${event.start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - ${event.end.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                     </div>
+                    <div class="event-delete">
+                      <button class="delete-btn" data-id="${event._id}">Delete</button>
+                    </div>
                 </div>`;
             }
         });
@@ -245,6 +248,35 @@ document.addEventListener('DOMContentLoaded', function () {
                 </div>`;
         }
         eventsContainer.innerHTML = events;
+
+        // Add event listeners to delete buttons
+        const deleteButtons = document.querySelectorAll(".delete-btn");
+        deleteButtons.forEach(button => {
+            button.addEventListener("click", (e) => {
+                const eventId = e.target.getAttribute("data-id");
+                deleteEvent(eventId);
+            });
+        });
+    }
+
+    function deleteEvent(eventId) {
+        fetch(`/events/${eventId}`, {
+            method: 'DELETE',
+        })
+        .then(response => {
+            if (response.status === 200) {
+                // Remove event from local array
+                const index = eventsArr.findIndex(event => event._id === eventId);
+                if (index > -1) {
+                    eventsArr.splice(index, 1);
+                    updateEvents(activeDay); // Update the events list in UI
+                    location.reload(); // Reload the page to refresh the calendar
+                }
+            } else {
+                alert("Failed to delete event");
+            }
+        })
+        .catch(error => console.error('Error deleting event:', error));
     }
 
     addEventBtn.addEventListener("click", () => {
@@ -308,6 +340,7 @@ document.addEventListener('DOMContentLoaded', function () {
         .then(response => response.json())
         .then(data => {
             eventsArr.push({
+                _id: data._id,
                 title: data.title,
                 start: new Date(data.start),
                 end: new Date(data.end)
@@ -327,5 +360,3 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 });
-
-
